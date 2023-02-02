@@ -76,3 +76,83 @@ class Traverse:
                     s.node(var_next)
                     s.attr(rank='same')
                 self.dot.edge(var, var_next)
+
+              
+        elif root_key == 'repeat':
+            # print - draw_node
+            var = f"node_repeat_{self.i}"
+            self.i += 1
+            self.dot.node(var, f"{root_key}", {'color': 'darkseagreen2', 'style': 'filled', 'shape': 'square'})
+
+            var_repeat = self.traverse(node.repeat)
+            if not(var_repeat == None):
+                self.dot.edge(var, var_repeat)
+            var_test = self.traverse(node.test)
+            if not(var_test == None):
+                self.dot.edge(var, var_test)
+
+            # right_flag = True
+            var_next = self.traverse(node.next)
+            if not(var_next == None):
+                with self.dot.subgraph() as s:
+                    s.attr(rank='same')
+                    s.node(var)
+                    s.node(var_next)
+                self.dot.edge(var, var_next)
+
+
+        elif root_key == 'assign':
+            # print - draw_node
+            var = f"node_assign_{self.i}"
+            self.i += 1
+            self.dot.node(var, f"{root_key}\n({root_value})", {'color': 'darkseagreen2', 'style': 'filled', 'shape': 'square'})
+
+            var_assign = self.traverse(node.assign)
+            if not(var_assign == None):
+                self.dot.edge(var, var_assign)
+
+            # right_flag = True
+            var_next = self.traverse(node.next)
+            if not(var_next == None):
+                with self.dot.subgraph() as s:
+                    s.attr(rank='same')
+                    s.node(var)
+                    s.node(var_next)
+                self.dot.edge(var, var_next)
+
+
+        elif root_key == 'read':
+            # print - draw_node
+            var = f"node_read_{self.i}"
+            self.i += 1
+            self.dot.node(var, f"{root_key}\n({root_value})", {'color': 'darkseagreen2', 'style': 'filled', 'shape': 'square'})
+
+            # right_flag = True
+            var_next = self.traverse(node.next)
+            if not(var_next == None):
+                with self.dot.subgraph() as s:
+                    s.attr(rank='same')
+                    s.node(var)
+                    s.node(var_next)
+                self.dot.edge(var, var_next)
+
+
+        elif root_key == 'write':
+            # print - draw_node
+            var = f"node_write_{self.i}"
+            self.i += 1
+            self.dot.node(var, f"{root_key}", {'color': 'darkseagreen2', 'style': 'filled', 'shape': 'square'})
+            var_write = self.traverse(node.write)
+            if not(var_write == None):
+                self.dot.edge(var, var_write)
+
+            # right_flag = True
+            var_next = self.traverse(node.next)
+            if not(var_next == None):
+                with self.dot.subgraph() as s:
+                    s.attr(rank='same')
+                    s.node(var)
+                    s.node(var_next) # s.attr(rank='same')
+                self.dot.edge(var, var_next)
+
+        return var
