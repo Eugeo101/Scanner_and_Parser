@@ -65,3 +65,73 @@ class Parser:
         self.match('UNTIL')
         temp.test_child(self.exp())
         return temp
+
+    def assign_stmt(self):
+        temp = make_assign_Node(self.token_list[self.index])
+        self.match('IDENTIFIER')
+        self.match('ASSIGN')
+        temp.assign_child(self.exp())
+        return temp
+
+    def read_stmt(self):
+        self.match('READ')
+        temp = make_read_Node(self.token_list[self.index])
+        self.match('IDENTIFIER')
+        return temp
+
+    def write_stmt(self):
+        temp = make_write_Node(self.token_list[self.index])
+        self.match('WRITE')
+        temp.write_child(self.exp())
+        return temp
+
+    def exp(self):
+        temp = self.simple_exp()
+        if ((self.accept == False) and ((self.token_list[self.index]['tokentype'] == 'LESSTHAN') or (
+                self.token_list[self.index]['tokentype'] == 'EQUAL'))):
+            new_temp = makeOpNode(self.token_list[self.index])
+            self.match(self.token_list[self.index]['tokentype'])
+            new_temp.left_child(temp)
+            new_temp.right_child(self.simple_exp())
+            temp = new_temp
+        return temp
+
+    def simple_exp(self):
+        temp = self.term()
+        while ((self.accept == False) and ((self.token_list[self.index]['tokentype'] == 'PLUS') or (
+                self.token_list[self.index]['tokentype'] == 'MINUS'))):
+            new_temp = makeOpNode(self.token_list[self.index])
+            self.match(self.token_list[self.index]['tokentype'])
+            new_temp.left_child(temp)
+            new_temp.right_child(self.term())
+            temp = new_temp
+        return temp
+
+    def term(self):
+        temp = self.factor()
+        while ((self.accept == False) and ((self.token_list[self.index]['tokentype'] == 'MULT') or (
+                self.token_list[self.index]['tokentype'] == 'DIV'))):
+            new_temp = makeOpNode(self.token_list[self.index])
+            self.match(self.token_list[self.index]['tokentype'])
+            new_temp.left_child(temp)
+            new_temp.right_child(self.factor())
+            temp = new_temp
+        return temp
+
+    def factor(self):
+        if (self.token_list[self.index]['tokentype'] == 'OPENBRACKET'):
+            self.match('OPENBRACKET')
+            temp = self.exp()
+            self.match('CLOSEDBRACKET')
+        elif (self.token_list[self.index]['tokentype'] == 'NUMBER'):
+            temp = make_Id_Const_Node(self.token_list[self.index])
+            self.match('NUMBER')
+        elif (self.token_list[self.index]['tokentype'] == 'IDENTIFIER'):
+            temp = make_Id_Const_Node(self.token_list[self.index])
+            self.match('IDENTIFIER')
+        else:
+            self.error(self.index)
+        return temp
+
+    def error(self, index):
+        raise ValueError('SyntaxError', self.token_list[self.index]['tokentype'])
