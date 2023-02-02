@@ -44,3 +44,63 @@ class make_if_Node:  # if have 3 childs
 
     def next_child(self, node):
         self.next = node
+
+        
+class make_repeat_Node:  # repeat have 2 childs
+
+    def __init__(self, root_node):
+        self.root_key = 'repeat'
+        self.root_value = root_node['tokenvalue']
+        self.shape = 'square'
+        self.next = None
+
+    def test_child(self, node):
+        self.test = node
+
+    def repeat_child(self, node):
+        self.repeat = node
+
+    def next_child(self, node):
+        self.next = node
+
+
+class make_assign_Node:  # write have 1 childs
+
+    def __init__(self, root_node):
+        self.root_key = 'assign'
+        self.root_value = root_node['tokenvalue']  # ely 2blo => make_assign_Node([index-1])
+        self.shape = 'square'
+        self.next = None
+
+    def assign_child(self, node):
+        self.assign = node
+
+    def next_child(self, node):
+        self.next = node
+
+
+class make_read_Node:  # read have 0 childs
+
+    def __init__(self, root_node):
+        self.root_key = 'read'
+        self.root_value = root_node['tokenvalue']  # READ -> (match('READ'), make_read_node())
+        self.shape = 'square'
+        self.next = None
+
+    def next_child(self, node):
+        self.next = node
+
+
+class make_write_Node:  # write have 3 childs
+
+    def __init__(self, root_node):
+        self.root_key = 'write'
+        self.root_value = root_node['tokenvalue']  # mosh mohm
+        self.shape = 'square'
+        self.next = None
+
+    def write_child(self, node):
+        self.write = node
+
+    def next_child(self, node):
+        self.next = node
