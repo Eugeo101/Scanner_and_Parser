@@ -1,0 +1,5 @@
+graphviz is required in order visualize syntax tree from exe
+
+1st graphviz installer provided for 32 and 64 bits install it first
+
+2nd open exe and have fun
